@@ -1,5 +1,44 @@
 const getCipher = (char, key) => {
-  return char;
+  /*
+
+    lowerCaseA = 65
+
+  */
+  let lowerCaseA = 65;
+  let lowerCaseZ = 90;
+  let upperCaseA = 97;
+  let upperCaseZ = 122;
+
+  const x = char.charCodeAt(0);
+  let newCode = x; //Default to no shift
+
+  if (x >= lowerCaseA && x <= lowerCaseZ || x >= upperCaseA && x <= upperCaseZ) {
+    //alpha
+    newCode = x - key;
+    if (key > 0) {
+      //Positive key -> left-shift
+      if (x >= lowerCaseA + key && x <= lowerCaseZ || x >= upperCaseA + key && x <= upperCaseZ) {
+        //character doesn't need to wrap, just transpose
+        newCode = x - key;
+      } else {
+        //character needs to wrap
+        newCode = x - key + 26;
+      }
+    } else {
+      //Negative key -> right-shift
+      if (x >= lowerCaseA && x <= lowerCaseZ + key || x >= upperCaseA && x <= upperCaseZ + key) {
+        //character doesn't need to wrap, just transpose
+        newCode = x - key;
+      } else {
+        //character needs to wrap
+        newCode = x - key - 26;
+      }
+      
+    }
+  }
+
+
+  return String.fromCharCode(newCode);
 };
 
 const encrypt = (plaintext, key) => {
@@ -14,7 +53,7 @@ const encrypt = (plaintext, key) => {
     */
   const output = [];
   plaintext.split('').forEach(element => {
-    output.push(getCipher(element, key));
+    output.push(getCipher(element, -key));
   });
   return output.join('');
 };
